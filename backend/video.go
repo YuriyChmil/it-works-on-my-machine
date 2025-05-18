@@ -187,6 +187,13 @@ func videoPostHandler(ctx *gin.Context) {
 			httpErrorInternalServerError(err, ctx)
 			return
 		}
+		client, err := getRedis()
+		if err != nil {
+			slog.Error("Error getting redis client", "error", err)
+			httpErrorInternalServerError(err, ctx)
+			return
+		}
+		client.Del(ctx, "videos").Result()
 	}
 }
 

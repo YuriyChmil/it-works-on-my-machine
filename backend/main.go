@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/rs/cors"
 	"log"
 	"log/slog"
 	"net/http"
@@ -11,8 +13,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -38,9 +38,15 @@ func main() {
 	if len(port) == 0 {
 		port = "8080"
 	}
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		Debug:            true,
+	})
+	handler := c.Handler(router.Handler())
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%s", port),
-		Handler: router.Handler(),
+		Handler: handler,
 	}
 
 	// Signals

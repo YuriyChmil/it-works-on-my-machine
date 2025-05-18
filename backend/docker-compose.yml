@@ -1,0 +1,55 @@
+services:
+
+  redis:
+    image: redis:7.4.2
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - backend-network
+  golang-demo:
+    tty: true
+    build:
+        context: .
+        target: stage
+    volumes:
+      - .:/go/src/
+    environment:
+      PORT: 8080
+      DB_ENDPOINT: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: db
+      REDIS_PORT: 6379
+      REDIS_ENDPOINT: redis
+      DEBUG: true
+    ports:
+      - 8080:8080
+    networks:
+      - backend-network
+
+  postgres:
+    image: postgres:17.5-alpine3.21
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db_schema.sql:/docker-entrypoint-initdb.d/db_schema.sql
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - backend-network
+networks:
+  backend-network:
+    name: backend-network
+
+volumes:
+  dumps:
+  redis:

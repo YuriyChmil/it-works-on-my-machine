@@ -1,0 +1,19 @@
+services:
+
+  frontend-demo:
+    tty: true
+    build:
+        context: .
+    volumes:
+      - .:/code/
+    ports:
+      - 3000:3000
+    networks:
+      - frontend-network
+networks:
+  frontend:
+    name: frontend-network
+
+#    docker image tag frontend-frontend-demo yuriichml1/front:1.0
+#
+#    docker push yuriichml1/front:1.0

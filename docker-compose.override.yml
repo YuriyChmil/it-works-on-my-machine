@@ -1,0 +1,24 @@
+networks:
+  app:
+    name: app-network
+  backend-network:
+    name: backend-network
+  frontend-network:
+    name: frontend-network
+services:
+  golang-demo:
+    networks:
+      - app
+      - backend-network
+  frontend-demo:
+    environment:
+      REACT_APP_BACKEND_URL: "http://localhost:8080"
+    networks:
+      - app
+      - frontend-network
+  redis:
+    networks:
+      - backend-network
+  postgres:
+    networks:
+      - backend-network
