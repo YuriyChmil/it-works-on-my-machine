@@ -22,6 +22,6 @@ scrape_configs:
         target_label: container_name
         regex: /(.*)
         action: replace
-#  - job_name: cadvisor
-#    static_configs:
-#      - targets: ['cadvisor:8181']
+  - job_name: golang-demo
+    static_configs:
+      - targets: ['golang-demo:8080']

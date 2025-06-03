@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/penglongli/gin-metrics/ginmetrics"
 	"github.com/rs/cors"
 	"log"
 	"log/slog"
@@ -29,11 +30,14 @@ func main() {
 	log.Println("Starting server...")
 	router := gin.New()
 	router.GET("/fibonacci", fibonacciHandler)
+	m := ginmetrics.GetMonitor()
+	m.SetMetricPath("/metrics")
 	router.POST("/video", videoPostHandler)
 	router.GET("/videos", videosGetHandler)
 	router.GET("/ping", pingHandler)
 	router.GET("/memory-leak", memoryLeakHandler)
 	router.GET("/", rootHandler)
+	m.Use(router)
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
 		port = "8080"

@@ -14,7 +14,7 @@ services:
     container_name: golang-demo
     build:
         context: .
-        target: stage
+        target: prod
     volumes:
       - .:/go/src/
     environment:

@@ -12,17 +12,11 @@ scrape_configs:
   - job_name: container_logs
     docker_sd_configs:
       - host: unix:///var/run/docker.sock
-        refresh_interval: 5s
-    relabel_configs:
-      - source_labels: ['__meta_docker_container_name']
-        regex: '/(.*)'
-        target_label: 'container'
-      - source_labels: ['__meta_docker_image']
-        regex: '(.*)'
-        target_label: 'image'
-      - source_labels: ['__meta_docker_container_id']
-        regex: '(.*)'
-        target_label: 'container_id'
+        refresh_interval: 1s
+#    relabel_configs:
+#      - source_labels: ['__meta_docker_container_name']
+#        regex: '/(.*)'
+#        target_label: 'container'
 
   - job_name: system
     static_configs:

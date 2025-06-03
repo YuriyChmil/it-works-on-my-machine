@@ -16,3 +16,13 @@ datasources:
       timeInterval: 15s
       tlsAuth: false
       tlsAuthWithCACert: false
+  - name: Loki
+    type: loki
+    access: proxy
+    basicAuth: false
+    url: http://loki:3100
+    jsonData:
+      timeout: 60
+      maxLines: 1000
+      tlsAuth: false
+      tlsAuthWithCACert: false
