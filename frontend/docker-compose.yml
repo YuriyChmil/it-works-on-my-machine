@@ -1,7 +1,7 @@
 services:
 
   frontend-demo:
-    tty: true
+    container_name: frontend-demo
     build:
         context: .
     volumes:

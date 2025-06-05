@@ -1,6 +1,7 @@
 services:
 
   redis:
+    container_name: redis
     image: redis:7.4.2
     restart: always
     ports:
@@ -10,10 +11,10 @@ services:
     networks:
       - backend-network
   golang-demo:
-    tty: true
+    container_name: golang-demo
     build:
         context: .
-        target: stage
+        target: prod
     volumes:
       - .:/go/src/
     environment:
