@@ -47,27 +47,23 @@ services:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yaml
     networks:
       - monitoring-network
-  promtail:
-    image: grafana/promtail:latest
-    volumes:
-      - ./loki/promtail-config.yml:/etc/promtail/promtail-config.yaml
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/log:/var/log:ro
-    networks:
-      - monitoring-network
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     restart: unless-stopped
+    privileged: true
     ports:
       - "8181:8181"
     command:
       - "-port=8181"
     volumes:
-#      - /:/rootfs:ro
-#      - /var/run:/var/run:rw
-#      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - /etc/machine-id:/etc/machine-id:ro
+#      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro
     networks:
       - monitoring-network
 

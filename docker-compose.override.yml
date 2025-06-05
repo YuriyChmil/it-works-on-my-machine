@@ -9,11 +9,19 @@ networks:
     name: monitoring-network
 services:
   golang-demo:
+    logging: &logging
+      driver: loki
+      options:
+        loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+        loki-batch-size: "5"
+        loki-retries: "3"
+        max-size: "10m"
     networks:
       - app
       - backend-network
       - monitoring-network
   frontend-demo:
+    logging: *logging
     environment:
       REACT_APP_BACKEND_URL: "http://localhost:8080"
     networks:
@@ -21,10 +29,25 @@ services:
       - frontend-network
       - monitoring-network
   redis:
+    logging: *logging
     networks:
       - backend-network
       - monitoring-network
   postgres:
+    logging: *logging
     networks:
       - backend-network
       - monitoring-network
+
+
+  prometheus:
+    logging: *logging
+
+  alertmanager:
+    logging: *logging
+
+  grafana:
+    logging: *logging
+
+  loki:
+    logging: *logging
