@@ -1,9 +1,11 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -23,6 +25,7 @@ type Video struct {
 }
 
 func getDB(c *gin.Context) *pg.DB {
+	log.Println(fmt.Sprintf("HOST -%s, pass -%, user -%s, db -%s, port -%s", os.Getenv("DB_ENDPOINT"), os.Getenv("DB_PASS"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT")))
 	if dbSession != nil {
 		return dbSession
 	}
@@ -62,7 +65,7 @@ func getDB(c *gin.Context) *pg.DB {
 		c.String(http.StatusBadRequest, "Environment variable `DB_NAME` is empty")
 		return nil
 	}
-	dbSession := pg.Connect(&pg.Options{
+	dbSession = pg.Connect(&pg.Options{
 		Addr:     endpoint + ":" + port,
 		User:     user,
 		Password: pass,
@@ -210,8 +213,9 @@ func getRedis() (*redis.Client, error) {
 	}
 
 	return redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", endpoint, port),
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:      fmt.Sprintf("%s:%s", endpoint, port),
+		Password:  "", // no password set
+		DB:        0,  // use default DB
+		TLSConfig: &tls.Config{InsecureSkipVerify: true},
 	}), nil
 }

@@ -11,7 +11,7 @@ services:
     networks:
       - frontend-network
 networks:
-  frontend:
+  frontend-network:
     name: frontend-network
 
 #    docker image tag frontend-frontend-demo yuriichml1/front:1.0
