@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.36.0 (HEAD)
+  labels:
+    io.kompose.service: golang-demo
+  name: golang-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: golang-demo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.36.0 (HEAD)
+      labels:
+        io.kompose.service: golang-demo
+    spec:
+      containers:
+        - env:
+            - name: DB_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: db-host-secret
+                  key: DB_HOST
+            - name: DB_NAME
+              value: devopsdb
+            - name: DB_PASS
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: postgres
+            - name: DEBUG
+              value: "true"
+            - name: PORT
+              value: "8080"
+            - name: REDIS_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: redis-host-secret
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              value: "6379"
+          image: docker.io/yuriichml1/back:5.0
+          name: golang-demo
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always
