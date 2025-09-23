@@ -14,9 +14,9 @@ services:
     container_name: golang-demo
     build:
         context: .
-        target: prod
-    volumes:
-      - .:/go/src/
+        target: stage
+#    volumes:
+#      - .:/go/src/
     environment:
       PORT: 8080
       DB_ENDPOINT: postgres
