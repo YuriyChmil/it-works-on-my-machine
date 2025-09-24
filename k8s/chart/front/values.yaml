@@ -121,24 +121,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-backend:
-  service:
-    name: backend-demo
-    port: 8080
-    targetPort: 8080
-    label: "backend-demo"
-
-  ingress:
-    host: api.local.test
-
-  deployment:
-    replicas: 1
-    label: "backend-demo-deployment"
-    container:
-      name: golang-demo-container
-      port: 8080
-    image: docker.io/yuriichml1/back
-    tag: "4.0"
 
 frontend:
   service:
@@ -159,24 +141,3 @@ frontend:
     backendURL: "http://api.local.test"
     image: docker.io/yuriichml1/front
     tag: "2.0"
-
-postgresql:
-  startupProbe:
-    enabled: true
-  auth:
-    postgresPassword: "postgres"
-    username: "postgres"
-    password: "postgres"
-    database: "db"
-  primary:
-    initdb:
-      scripts:
-        create_table.sql: |
-          CREATE TABLE IF NOT EXISTS videos (
-            id VARCHAR(255) NOT NULL,
-            title VARCHAR(255) NOT NULL
-          );
-
-redis:
-  auth:
-    enabled: false
