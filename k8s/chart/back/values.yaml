@@ -137,7 +137,8 @@ backend:
     container:
       name: golang-demo-container
       port: 8080
-    image: docker.io/yuriichml1/back:4.0
+    image: docker.io/yuriichml1/back
+    tag: "4.0"
 
 frontend:
   service:
@@ -156,7 +157,8 @@ frontend:
       name: frontend-demo-container
       port: 3000
     backendURL: "http://api.local.test"
-    image: docker.io/yuriichml1/front:2.0
+    image: docker.io/yuriichml1/front
+    tag: "2.0"
 
 postgresql:
   startupProbe:

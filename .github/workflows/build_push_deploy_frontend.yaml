@@ -37,7 +37,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: yuriichml1/front:latest
+          tags: yuriichml1/front:${{ github.sha }}
           context: .
           file: frontend/Dockerfile
 

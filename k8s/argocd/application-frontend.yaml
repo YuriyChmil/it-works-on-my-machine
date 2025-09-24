@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app
+  name: my-app-frontend
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/YuriyChmil/it-works-on-my-machine.git
-    targetRevision: HEAD
-    path: k8s/chart
+    targetRevision: feature/add-CI
+    path: k8s/chart/front
   destination:
     server: https://kubernetes.default.svc
     namespace: default

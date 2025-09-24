@@ -26,7 +26,7 @@ spec:
         - env:
             - name: REACT_APP_BACKEND_URL
               value: {{ .Values.frontend.deployment.backendURL }}
-          image: {{ .Values.frontend.deployment.image }}
+          image: {{ .Values.frontend.deployment.image }}:{{ .Values.frontend.deployment.tag }}
           name: {{ .Values.frontend.deployment.container.name | default "frontend-demo" }}
           ports:
             - containerPort: {{ .Values.frontend.deployment.container.port | default 3001 }}

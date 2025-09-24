@@ -44,7 +44,7 @@ spec:
               value: my-app-redis-master.default.svc.cluster.local
             - name: REDIS_PORT
               value: "6379"
-          image: {{ .Values.backend.deployment.image }}
+          image: {{ .Values.backend.deployment.image }}:{{ .Values.backend.deployment.tag }}
           name: {{ .Values.backend.deployment.container.name | default "golang-demo" }}
           ports:
             - containerPort: {{ .Values.backend.deployment.container.port | default 5678 }}
