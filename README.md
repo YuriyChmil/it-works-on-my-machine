@@ -18,3 +18,6 @@ DEPLOY FIRST TIME APPS
  kubectl apply -f k8s/argocd/application-frontend.yaml
 
 ```
+INSTALL INGRESS CONTROLLER to get access front and backend via domain on local machine
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
