@@ -18,14 +18,3 @@ spec:
                 name: {{ .Values.backend.service.name | default (include "chart.fullname" .) }}-golang-demo-svc
                 port:
                   number: {{ .Values.backend.service.port | default 8080 }}
-    # Frontend
-    - host: {{ .Values.frontend.ingress.host | default "frontend.local.test" }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-frontend
-                port:
-                  number: {{ .Values.frontend.service.port | default 80 }}
