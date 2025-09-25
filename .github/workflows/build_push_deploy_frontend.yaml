@@ -41,66 +41,50 @@ jobs:
           tags: yuriichml1/front:${{ github.sha }}
           context: .
           file: frontend/Dockerfile
-
-#      - name: Build and push image
-#        uses: docker/build-push-action@v6
-#        env:
-#          DOCKER_BUILDKIT: 1
-#          SERVICE: ${{ matrix.service }}
-#          ECR_REPOSITORY: ${{ matrix.repository }}
-#          IMAGE_CACHE_REPO: ${{ matrix.image_cache_repo }}
-#        with:
-#          context: .
-#          file: deployments/docker/Dockerfile
-#          push: true
-#          target: prod
-#          cache-from: type=registry,ref=${{ env.IMAGE_CACHE_REPO }}
-#          cache-to: type=registry,ref=${{ env.IMAGE_CACHE_REPO }},mode=max,image-manifest=true,oci-mediatypes=true
-#          tags: |
-#            968199160813.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_HASH }}
-
-#  deploy:
-#    runs-on: [self-hosted, linux, x64, bodyfit-msa, prod]
-#    needs:
-#      - build-push
-#    env:
-#      BRANCH: master
-#      TAG_FILE_PATH: email/values_prod/global.yaml
-#      CONSUMER_FILE_PATH: email/values_prod/email.yaml
-#      SERVER_FILE_PATH: email/values_prod/http-server.yaml
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          repository: 'amomama/bodyfit-email-charts'
-#          ref: ${{ env.BRANCH }}
-#          token: ${{ secrets.GH_TOKEN }}
-#
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: commit-hash
-#
-#      - name: Save commit hash to GITHUB ENV
-#        run: |
-#          echo "COMMIT_HASH=$(cat commit_hash)" >> $GITHUB_ENV
-#
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: commit-link
-#
-#      - name: Save commit link to GITHUB ENV
-#        run: |
-#          echo "COMMIT_LINK=$(cat commit_link)" >> $GITHUB_ENV
-#
-#      - name: Update charts commit hash
-#        run: |
-#          sed -i -E "s/([ \t]*tag\: )(.*)/\1\'${{env.COMMIT_HASH}}\'/" ${{ env.CONSUMER_FILE_PATH }}
-#          sed -i -E "s/([ \t]*tag\: )(.*)/\1\'${{env.COMMIT_HASH}}\'/" ${{ env.SERVER_FILE_PATH }}
-#          sed -i -E "s#([ \t]*link\: )(.*)#\1${{env.COMMIT_LINK}}#" ${{ env.TAG_FILE_PATH }}
-#
-#      - name: Commit changes
-#        uses: EndBug/add-and-commit@v9.1.4
-#        with:
-#          author_name: GitHub Actions
-#          author_email: operations@amomedia.com
-#          message: "Updated to commit ${{env.COMMIT_LINK}}"
+  deploy:
+    runs-on: ubuntu-22.04
+    needs:
+      - build-push
+      #    env:
+      #      BRANCH: master
+      #      TAG_FILE_PATH: email/values_prod/global.yaml
+      #      CONSUMER_FILE_PATH: email/values_prod/email.yaml
+      #      SERVER_FILE_PATH: email/values_prod/http-server.yaml
+      #
+      #    steps:
+      #      - uses: actions/checkout@v4
+      #        with:
+      #          repository: 'amomama/bodyfit-email-charts'
+      #          ref: ${{ env.BRANCH }}
+      #          token: ${{ secrets.GH_TOKEN }}
+      #
+      #      - uses: actions/download-artifact@v4
+      #        with:
+      #          name: commit-hash
+      #
+      #      - name: Save commit hash to GITHUB ENV
+      #        run: |
+      #          echo "COMMIT_HASH=$(cat commit_hash)" >> $GITHUB_ENV
+      #
+      #      - uses: actions/download-artifact@v4
+      #        with:
+      #          name: commit-link
+      #
+      #      - name: Save commit link to GITHUB ENV
+      #        run: |
+      #          echo "COMMIT_LINK=$(cat commit_link)" >> $GITHUB_ENV
+      #
+      #      - name: Update charts commit hash
+      #        run: |
+      #          sed -i -E "s/([ \t]*tag\: )(.*)/\1\'${{env.COMMIT_HASH}}\'/" ${{ env.CONSUMER_FILE_PATH }}
+      #          sed -i -E "s/([ \t]*tag\: )(.*)/\1\'${{env.COMMIT_HASH}}\'/" ${{ env.SERVER_FILE_PATH }}
+      #          sed -i -E "s#([ \t]*link\: )(.*)#\1${{env.COMMIT_LINK}}#" ${{ env.TAG_FILE_PATH }}
+      - name: Update Helm values file
+        run: |
+          sed -i "s|tag:.*|tag: ${{ github.sha }}|" chart/front/values.yaml
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: GitHub Actions
+          author_email: cicd@test.com
+          message: "Updated to commit ${{ github.sha }}"
