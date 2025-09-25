@@ -63,46 +63,14 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - build-push
-#    env:
-#      BRANCH: master
-#      TAG_FILE_PATH: email/values_prod/global.yaml
-#      CONSUMER_FILE_PATH: email/values_prod/email.yaml
-#      SERVER_FILE_PATH: email/values_prod/http-server.yaml
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          repository: 'amomama/bodyfit-email-charts'
-#          ref: ${{ env.BRANCH }}
-#          token: ${{ secrets.GH_TOKEN }}
-#
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: commit-hash
-#
-#      - name: Save commit hash to GITHUB ENV
-#        run: |
-#          echo "COMMIT_HASH=$(cat commit_hash)" >> $GITHUB_ENV
-#
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: commit-link
-#
-#      - name: Save commit link to GITHUB ENV
-#        run: |
-#          echo "COMMIT_LINK=$(cat commit_link)" >> $GITHUB_ENV
-#
-#      - name: Update charts commit hash
-#        run: |
-#          sed -i -E "s/([ \t]*tag\: )(.*)/\1\'${{env.COMMIT_HASH}}\'/" ${{ env.CONSUMER_FILE_PATH }}
-#          sed -i -E "s/([ \t]*tag\: )(.*)/\1\'${{env.COMMIT_HASH}}\'/" ${{ env.SERVER_FILE_PATH }}
-#          sed -i -E "s#([ \t]*link\: )(.*)#\1${{env.COMMIT_LINK}}#" ${{ env.TAG_FILE_PATH }}
+    steps:
       - name: Update Helm values file
         run: |
-          sed -i "s|tag:.*|tag: ${{ github.sha }}|" chart/backend/values.yaml
+          sed -i "s|tag:.*|tag: ${{ github.sha }}|" chart/back/values.yaml
       - name: Commit changes
         uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: GitHub Actions
           author_email: cicd@test.com
           message: "Updated to commit ${{ github.sha }}"
+
