@@ -14,7 +14,7 @@ const VideoList = () => {
 
   return (
     <div>
-      <h1>List Videos</h1>
+      <h1>List Videos new version</h1>
       <ul>
         {videos.map(video => (
           <li key={video.id}>
