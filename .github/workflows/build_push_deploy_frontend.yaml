@@ -48,12 +48,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure Git for HTTPS
+        run: |
+          git remote set-url origin https://github.com/YuriyChmil/it-works-on-my-machine.git
       - name: Update Helm values file
         run: |
           sed -i "s|tag:.*|tag: ${{ github.sha }}|" k8s/chart/front/values.yaml
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9.1.4
-        with:
-          author_name: GitHub Actions
-          author_email: cicd@test.com
-          message: "Updated to commit ${{ github.sha }}"
+      - name: Commit and Push changes
+        run: |
+            git config --global user.email "ci@example.com"
+            git config --global user.name "CI CD Bot"
+            git add k8s/chart/front/values.yaml
+            git commit -m "Auto-update image tag for ARGOCD ${{ github.sha }}"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/YuriyChmil/it-works-on-my-machine.git
