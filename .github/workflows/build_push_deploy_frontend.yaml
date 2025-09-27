@@ -56,7 +56,7 @@ jobs:
       - name: Update Helm values file
         run: |
           sed -i "s|tag:.*|tag: ${{ github.sha }}|" k8s/chart/front/values.yaml
-      - name: Commit and Push changes
+      - name: Commit and Push changes  #unable use EndBug/add-and-commit@v9.1.4 action cause if act permission error for write
         run: |
             git config --global user.email "ci@example.com"
             git config --global user.name "CI CD Bot"
