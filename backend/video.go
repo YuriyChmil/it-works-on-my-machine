@@ -25,7 +25,7 @@ type Video struct {
 }
 
 func getDB(c *gin.Context) *pg.DB {
-	log.Println(fmt.Sprintf("HOST -%s, pass -%, user -%s, db -%s, port -%s", os.Getenv("DB_ENDPOINT"), os.Getenv("DB_PASS"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT")))
+	log.Println(fmt.Sprintf("HOST -%s, pass -%s, user -%s, db -%s, port -%s", os.Getenv("DB_ENDPOINT"), os.Getenv("DB_PASS"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT")))
 	if dbSession != nil {
 		return dbSession
 	}
@@ -86,7 +86,7 @@ func videosGetHandler(ctx *gin.Context) {
 	videoCacheKay := "videos"
 	val, err := client.Get(ctx, videoCacheKay).Result()
 	if err == redis.Nil {
-		slog.Warn("key %s does not exist", videoCacheKay)
+		slog.Warn("key does not exist", "key", videoCacheKay)
 	} else if err != nil {
 		slog.Error("Error fetching from Redis", "error", err)
 		httpErrorInternalServerError(err, ctx)

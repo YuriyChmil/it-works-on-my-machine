@@ -1,0 +1,35 @@
+name: Go tests
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+permissions:
+  contents: read
+jobs:
+  GO_tests:
+    strategy:
+      matrix:
+        go_version: [ 1.23.x ]
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go_version }}
+
+      - name: run tests
+        run:  GOTOOLCHAIN=local go test -v ./... > test.json
+        working-directory: backend
+      
+      - name: Annotate tests
+        if: always()
+        uses: guyarb/golang-test-annotations@v0.8.0
+        with:
+          test-results: test.json

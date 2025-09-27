@@ -1,0 +1,65 @@
+---
+name: build-push-deploy-prod
+#act --container-architecture linux/amd64 --secret-file my.secrets -W '.github/workflows/build_push_deploy_frontend.yaml' -P ubuntu-22.04=catthehacker/ubuntu:act-latest
+on:
+  push:
+    branches:
+      - main
+      - add-CI
+    paths-ignore:
+      - '.github/**'
+      - '.backend/**'
+
+jobs:
+  build-push:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup docker context for buildx
+        id: buildx-context
+        run: |
+          docker context create builders
+
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          endpoint: builders
+
+      - name: Log in to Docker Hub and push image
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER_NAME }}
+          password: ${{ secrets.DOCKER_USER_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: yuriichml1/front:${{ github.sha }}
+          context: frontend
+  deploy:
+    runs-on: ubuntu-22.04
+    needs:
+      - build-push
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure Git for HTTPS
+        run: |
+          git remote set-url origin https://github.com/YuriyChmil/it-works-on-my-machine.git
+      - name: Update Helm values file
+        run: |
+          sed -i "s|tag:.*|tag: ${{ github.sha }}|" k8s/chart/front/values.yaml
+      - name: Commit and Push changes  #unable use EndBug/add-and-commit@v9.1.4 action cause if act permission error for write
+        run: |
+            git config --global user.email "ci@example.com"
+            git config --global user.name "CI CD Bot"
+            git add k8s/chart/front/values.yaml
+            git commit -m "Auto-update image tag for ARGOCD ${{ github.sha }}"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/YuriyChmil/it-works-on-my-machine.git
