@@ -39,26 +39,7 @@ jobs:
           target: prod
           push: true
           tags: yuriichml1/back:${{ github.sha }}
-          context: .
-          file: backend/Dockerfile
-
-#      - name: Build and push image
-#        uses: docker/build-push-action@v6
-#        env:
-#          DOCKER_BUILDKIT: 1
-#          SERVICE: ${{ matrix.service }}
-#          ECR_REPOSITORY: ${{ matrix.repository }}
-#          IMAGE_CACHE_REPO: ${{ matrix.image_cache_repo }}
-#        with:
-#          context: .
-#          file: deployments/docker/Dockerfile
-#          push: true
-#          target: prod
-#          cache-from: type=registry,ref=${{ env.IMAGE_CACHE_REPO }}
-#          cache-to: type=registry,ref=${{ env.IMAGE_CACHE_REPO }},mode=max,image-manifest=true,oci-mediatypes=true
-#          tags: |
-#            968199160813.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_HASH }}
-
+          context: backend
   deploy:
     runs-on: ubuntu-22.04
     needs:

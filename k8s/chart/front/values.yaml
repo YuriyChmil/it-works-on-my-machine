@@ -11,7 +11,7 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: be41f65e848083088526a6fd7ed7cc239741f446
+  tag: 5bca56ee1020b469b00d61f0331b8ac225ac32e4
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -140,4 +140,4 @@ frontend:
       port: 3000
     backendURL: "http://api.local.test"
     image: docker.io/yuriichml1/front
-    tag: be41f65e848083088526a6fd7ed7cc239741f446
+    tag: 5bca56ee1020b469b00d61f0331b8ac225ac32e4
